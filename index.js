@@ -274,7 +274,7 @@ async function fetchThreadText(url) {
     try {
         let fetchUrl = url;
         if (SCRAPINGANT_API_KEY) {
-            fetchUrl = `https://api.scrapingant.com/v2/general?url=${encodeURIComponent(url)}&x-api-key=${SCRAPINGANT_API_KEY}&browser=false`;
+            fetchUrl = `https://api.scrapingant.com/v2/general?url=${encodeURIComponent(url)}&x-api-key=${SCRAPINGANT_API_KEY}&browser=true`;
         }
         
         const response = await axios.get(fetchUrl);
