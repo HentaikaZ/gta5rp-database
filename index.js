@@ -270,17 +270,25 @@ async function fetchThreadText(page, url) {
         const html = await page.content();
         const $ = cheerio.load(html);
 
-        // В движке XenForo текст первого сообщения находится в классе .message-inner .bbWrapper
-        const firstPost = $('.message-inner .bbWrapper').first();
+        // В движке XenForo текст сообщений находится в классе .message-inner .bbWrapper
+        // Собираем текст со ВСЕХ сообщений на странице, так как длинные кодексы могут быть разбиты на несколько постов
+        const posts = $('.message-inner .bbWrapper');
+        let fullText = '';
 
-        // Заменяем теги <br> на настоящие переносы строк (\n), чтобы регулярки сработали
-        firstPost.find('br').replaceWith('\n');
+        posts.each((i, el) => {
+            const post = $(el);
+            
+            // Заменяем теги <br> на настоящие переносы строк (\n), чтобы регулярки сработали
+            post.find('br').replaceWith('\n');
+            
+            // Вставляем переносы строк вокруг блочных элементов, чтобы текст не слипался
+            post.find('p, div, li, h1, h2, h3, h4, h5, h6, ul, ol, table, tr, td, th, tbody, thead, blockquote').prepend('\n').append('\n');
 
-        // Вставляем переносы строк вокруг блочных элементов, чтобы текст не слипался
-        firstPost.find('p, div, li, h1, h2, h3, h4, h5, h6, ul, ol, table, tr, td, th, tbody, thead, blockquote').prepend('\n').append('\n');
+            // Достаем очищенный текст поста и добавляем к общему тексту
+            fullText += post.text() + '\n\n';
+        });
 
-        // Достаем очищенный текст
-        return firstPost.text();
+        return fullText;
     } catch (e) {
         console.error(`[Ошибка] Не удалось скачать ${url}:`, e.message);
         return null;
