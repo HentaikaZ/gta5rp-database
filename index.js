@@ -256,8 +256,15 @@ async function fetchThreadText(page, url) {
 
     try {
         await page.goto(url, { waitUntil: 'domcontentloaded' });
-        // Небольшая задержка, чтобы Cloudflare успел пропустить (если выскочит проверка)
-        await new Promise(r => setTimeout(r, 3000));
+        
+        // Ждем появления контента, чтобы точно знать, что Cloudflare пропустил нас
+        // Максимальное время ожидания 15 секунд
+        try {
+            await page.waitForSelector('.message-inner .bbWrapper', { timeout: 15000 });
+        } catch (e) {
+            console.error(`    [Cloudflare/Timeout] Не удалось дождаться контента для ${url}`);
+            return null;
+        }
 
         const html = await page.content();
         const $ = cheerio.load(html);
@@ -391,6 +398,7 @@ async function run() {
                     serverHasErrors = true;
                 }
             } else {
+                console.log(`    ❌ Ошибка скачивания или блокировка Cloudflare`);
                 serverErrorText += `  - ${codeName}: Ошибка скачивания (возможно блокировка Cloudflare или неверная ссылка)\n`;
                 serverHasErrors = true;
             }
