@@ -277,10 +277,7 @@ async function fetchThreadText(page, url) {
         firstPost.find('br').replaceWith('\n');
         
         // Вставляем переносы строк вокруг блочных элементов, чтобы текст не слипался
-        firstPost.find('p, div, li, h1, h2, h3, h4, h5, h6, ul, ol').prepend('\n').append('\n');
-
-        // Убираем скрытый текст (спойлеры), цитаты и прочий мусор, если нужно
-        firstPost.find('.bbCodeBlock-quote').remove();
+        firstPost.find('p, div, li, h1, h2, h3, h4, h5, h6, ul, ol, table, tr, td, th, tbody, thead, blockquote').prepend('\n').append('\n');
 
         // Достаем очищенный текст
         return firstPost.text();
@@ -298,18 +295,41 @@ function parseTextToArticles(rawText, categoryName) {
     const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
     const articles = [];
 
-    let currentArticleTitle = '';
-    let currentArticleText = [];
     let currentChapterTitle = '';
+    
+    let currentArticleNumber = '';
+    let currentArticleName = '';
+    
+    let currentPartNumber = '';
+    let currentPartText = [];
 
     const chapterRegex = /^(?:Глава|Раздел|Часть)\s+([IVX\d]+)\.?\s*(.*)$/i;
-    const articleRegex = /^(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)\.?\s*(.*)$/i;
+    const articleRegex = /^(?:(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)|(\d+(?:\.\d+)+))\.?\s*(.*)$/i;
+    const partRegex = /^(?:ч\.?|часть)\s*(\d+)\.?\s*(.*)$/i;
 
-    function saveCurrentArticle() {
-        if (currentArticleTitle) {
+    function saveCurrentPart() {
+        if (currentArticleNumber) {
+            // Не сохраняем "пустую" статью (без текста), если сразу после названия идёт ч. 1
+            if (!currentPartNumber && currentPartText.length === 0) {
+                return;
+            }
+
+            let title = currentArticleNumber;
+            if (currentPartNumber) {
+                title += ` ч.${currentPartNumber}`;
+            }
+            
+            let textPieces = [];
+            if (currentArticleName) {
+                textPieces.push(currentArticleName + (currentArticleName.endsWith('.') ? '' : '.'));
+            }
+            if (currentPartText.length > 0) {
+                textPieces.push(currentPartText.join('\n'));
+            }
+            
             articles.push({
-                title: currentArticleTitle,
-                text: currentArticleText.join('\n').trim(),
+                title: title,
+                text: textPieces.join(' ').trim(),
                 category: categoryName,
                 isChapter: false
             });
@@ -320,11 +340,13 @@ function parseTextToArticles(rawText, categoryName) {
         // Проверяем, глава ли это
         const chapterMatch = line.match(chapterRegex);
         if (chapterMatch) {
-            saveCurrentArticle();
-            currentArticleTitle = '';
-            currentArticleText = [];
-            currentChapterTitle = line; // Например: "Глава 1. Общие положения"
-
+            saveCurrentPart();
+            currentArticleNumber = '';
+            currentArticleName = '';
+            currentPartNumber = '';
+            currentPartText = [];
+            
+            currentChapterTitle = line;
             articles.push({
                 title: currentChapterTitle,
                 text: "",
@@ -337,20 +359,34 @@ function parseTextToArticles(rawText, categoryName) {
         // Проверяем, статья ли это
         const articleMatch = line.match(articleRegex);
         if (articleMatch) {
-            saveCurrentArticle();
-            currentArticleTitle = line; // Например: "Статья 1.1"
-            currentArticleText = [];
+            saveCurrentPart();
+            currentArticleNumber = articleMatch[1] || articleMatch[2]; // e.g. "15.1"
+            currentArticleName = articleMatch[3]; // e.g. "Превышение полномочий"
+            currentPartNumber = '';
+            currentPartText = [];
             continue;
         }
 
-        // Если это просто текст, добавляем его к текущей статье
-        if (currentArticleTitle) {
-            currentArticleText.push(line);
+        // Проверяем, часть ли это
+        const partMatch = line.match(partRegex);
+        if (partMatch && currentArticleNumber) {
+            saveCurrentPart(); // Save previous part if it existed
+            currentPartNumber = partMatch[1]; // e.g. "1"
+            currentPartText = [];
+            if (partMatch[2]) {
+                currentPartText.push(partMatch[2]);
+            }
+            continue;
+        }
+
+        // Если это просто текст, добавляем его к текущей части (или к статье, если частей нет)
+        if (currentArticleNumber) {
+            currentPartText.push(line);
         }
     }
 
     // Сохраняем последнюю статью в конце файла
-    saveCurrentArticle();
+    saveCurrentPart();
     return articles;
 }
 
