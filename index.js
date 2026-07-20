@@ -1,16 +1,7 @@
-const axios = require('axios');
+const { connect } = require('puppeteer-real-browser');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
-
-// ============================================================================
-// НАСТРОЙКИ ОБХОДА CLOUDFLARE (ДЛЯ GITHUB ACTIONS)
-// ============================================================================
-// Так как GitHub Actions блокируется Cloudflare, нам нужен сервис-обходчик.
-// ScrapingAnt дает 10,000 бесплатных запросов в месяц (хватит на обновления каждый день).
-// Зарегистрируйтесь на https://scrapingant.com/ и вставьте ключ сюда, 
-// либо передайте через процесс окружения (в GitHub Secrets).
-const SCRAPINGANT_API_KEY = process.env.SCRAPINGANT_API_KEY || "";
 
 const OUTPUT_DIR = path.join(__dirname, 'output');
 if (!fs.existsSync(OUTPUT_DIR)) {
@@ -258,20 +249,17 @@ const SERVERS = [
 // ============================================================================
 
 /**
- * Скачивает HTML страницы. Если указан SCRAPINGANT_API_KEY, использует его для обхода Cloudflare.
+ * Скачивает HTML страницы через puppeteer-real-browser
  */
-async function fetchThreadText(url) {
+async function fetchThreadText(page, url) {
     if (!url || url.includes("СЮДА_ССЫЛКУ")) return null;
 
     try {
-        let fetchUrl = url;
-        if (SCRAPINGANT_API_KEY) {
-            fetchUrl = `https://api.scrapingant.com/v2/general?url=${encodeURIComponent(url)}&x-api-key=${SCRAPINGANT_API_KEY}&browser=true`;
-        }
+        await page.goto(url, { waitUntil: 'domcontentloaded' });
+        // Небольшая задержка, чтобы Cloudflare успел пропустить (если выскочит проверка)
+        await new Promise(r => setTimeout(r, 3000));
 
-        const response = await axios.get(fetchUrl);
-        const html = response.data;
-
+        const html = await page.content();
         const $ = cheerio.load(html);
 
         // В движке XenForo текст первого сообщения находится в классе .message-inner .bbWrapper
@@ -362,6 +350,14 @@ function parseTextToArticles(rawText, categoryName) {
 async function run() {
     console.log('=== Запуск парсера законов GTA5RP ===\n');
 
+    // Запускаем браузер один раз на все запросы
+    console.log('⏳ Запуск браузера для обхода Cloudflare...');
+    const { browser, page } = await connect({
+        headless: 'auto',
+        turnstile: true
+    });
+    console.log('✅ Браузер запущен!\n');
+
     let errorLog = [];
 
     for (const server of SERVERS) {
@@ -379,7 +375,7 @@ async function run() {
             }
 
             console.log(`  [Скачивание] ${codeName}...`);
-            const rawText = await fetchThreadText(url);
+            const rawText = await fetchThreadText(page, url);
 
             if (rawText) {
                 const parsedArticles = parseTextToArticles(rawText, codeName);
@@ -430,6 +426,7 @@ async function run() {
         console.log(`📝 Отчет об ошибках сохранен в: ${logFileName}`);
     }
 
+    await browser.close();
     console.log('🎉 Парсинг успешно завершен! Файлы лежат в папке output.');
 }
 
