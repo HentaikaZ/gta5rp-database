@@ -275,6 +275,9 @@ async function fetchThreadText(page, url) {
 
         // Заменяем теги <br> на настоящие переносы строк (\n), чтобы регулярки сработали
         firstPost.find('br').replaceWith('\n');
+        
+        // Вставляем переносы строк вокруг блочных элементов, чтобы текст не слипался
+        firstPost.find('p, div, li, h1, h2, h3, h4, h5, h6, ul, ol').prepend('\n').append('\n');
 
         // Убираем скрытый текст (спойлеры), цитаты и прочий мусор, если нужно
         firstPost.find('.bbCodeBlock-quote').remove();
