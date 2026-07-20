@@ -424,7 +424,7 @@ async function run() {
         const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
         const logFileName = `database[${dateStr}].txt`;
         const logFilePath = path.join(OUTPUT_DIR, logFileName);
-        
+
         const fileHeader = `=== Отчет об ошибках парсинга от ${dateStr} ===\n\nНиже перечислены кодексы, которые не удалось скачать или распознать:\n\n`;
         fs.writeFileSync(logFilePath, fileHeader + errorLog.join('\n'));
         console.log(`📝 Отчет об ошибках сохранен в: ${logFileName}`);
