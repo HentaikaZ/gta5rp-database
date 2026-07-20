@@ -2,7 +2,7 @@ name: Auto-update GTA5RP DB
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Запускается каждый день в полночь по UTC
+    - cron: '0 0 */4 * *' # Запускается каждые 4 дня в полночь по UTC
   workflow_dispatch: # Позволяет запускать вручную
 
 jobs:
