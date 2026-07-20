@@ -386,7 +386,22 @@ async function run() {
             }
 
             console.log(`  [Скачивание] ${codeName}...`);
-            const rawText = await fetchThreadText(page, url);
+            
+            let rawText = null;
+            let attempts = 0;
+            const maxAttempts = 3;
+
+            while (attempts < maxAttempts) {
+                attempts++;
+                rawText = await fetchThreadText(page, url);
+                
+                if (rawText) {
+                    break; // Успешно скачали
+                } else if (attempts < maxAttempts) {
+                    console.log(`    [Повтор] Ошибка скачивания, попытка ${attempts + 1} из ${maxAttempts}...`);
+                    await new Promise(r => setTimeout(r, 3000)); // Пауза перед повторной попыткой
+                }
+            }
 
             if (rawText) {
                 const parsedArticles = parseTextToArticles(rawText, codeName);
@@ -402,8 +417,8 @@ async function run() {
                     serverHasErrors = true;
                 }
             } else {
-                console.log(`    ❌ Ошибка скачивания или блокировка Cloudflare`);
-                serverErrorText += `  - ${codeName}: Ошибка скачивания (возможно блокировка Cloudflare или неверная ссылка)\n`;
+                console.log(`    ❌ Ошибка скачивания после ${maxAttempts} попыток.`);
+                serverErrorText += `  - ${codeName}: Ошибка скачивания после ${maxAttempts} попыток (возможно блокировка Cloudflare или неверная ссылка)\n`;
                 serverHasErrors = true;
             }
 
