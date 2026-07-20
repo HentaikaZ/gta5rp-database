@@ -307,7 +307,7 @@ function parseTextToArticles(rawText, categoryName) {
 
     let currentArticleNumber = '';
     let currentArticleName = '';
-
+    let currentArticleHasKeyword = false;
     let currentPartNumber = '';
     let currentPartText = [];
 
@@ -321,8 +321,8 @@ function parseTextToArticles(rawText, categoryName) {
 
     function saveCurrentPart(isFollowedByPart = false) {
         if (currentArticleNumber) {
-            // Не сохраняем "пустую" статью (без текста), если сразу после названия идёт ч. 1
-            if (!currentPartNumber && currentPartText.length === 0 && isFollowedByPart) {
+            // Если у статьи есть текст, ИЛИ если за ней не следует сразу новая часть, сохраняем её
+            if (currentPartText.length === 0 && isFollowedByPart && currentArticleName === '') {
                 return;
             }
 
@@ -352,7 +352,8 @@ function parseTextToArticles(rawText, categoryName) {
                 text: textPieces.join(' ').trim(),
                 category: categoryName,
                 isChapter: false,
-                _chapterPrefix: chapterPrefix
+                _chapterPrefix: chapterPrefix,
+                _hasKeyword: currentArticleHasKeyword
             });
         }
     }
@@ -364,6 +365,7 @@ function parseTextToArticles(rawText, categoryName) {
             saveCurrentPart(false);
             currentArticleNumber = '';
             currentArticleName = '';
+            currentArticleHasKeyword = false;
             currentPartNumber = '';
             currentPartText = [];
 
@@ -381,6 +383,7 @@ function parseTextToArticles(rawText, categoryName) {
         const articleMatch = line.match(articleRegex);
         if (articleMatch) {
             saveCurrentPart(false);
+            currentArticleHasKeyword = !!articleMatch[1];
             currentArticleNumber = articleMatch[1] || articleMatch[2]; // e.g. "15.1"
             currentArticleName = articleMatch[3]; // e.g. "Превышение полномочий"
             currentPartNumber = '';
@@ -412,7 +415,7 @@ function parseTextToArticles(rawText, categoryName) {
     // ПОСТ-ОБРАБОТКА: Проверяем, дублируются ли номера статей в разных главах
     const articleBaseNumbers = {}; // title -> Set of chapter prefixes
     for (const article of articles) {
-        if (!article.isChapter && article._chapterPrefix) {
+        if (!article.isChapter && article._chapterPrefix && article._hasKeyword) {
             // Берем только сам номер статьи без части (чтобы "1.1" и "1.1 ч.1" считались одной и той же статьей для проверки)
             const baseTitleMatch = article.title.match(/^[\d\.]+/);
             const baseTitle = baseTitleMatch ? baseTitleMatch[0] : article.title;
@@ -428,6 +431,7 @@ function parseTextToArticles(rawText, categoryName) {
     let needsChapterPrefix = false;
     for (const baseTitle in articleBaseNumbers) {
         if (articleBaseNumbers[baseTitle].size > 1) {
+            console.log(`[DEBUG] TRIGGERED BY: ${baseTitle} with prefixes:`, Array.from(articleBaseNumbers[baseTitle]));
             needsChapterPrefix = true;
             break;
         }
@@ -442,9 +446,10 @@ function parseTextToArticles(rawText, categoryName) {
         }
     }
 
-    // Удаляем служебное поле _chapterPrefix перед выдачей результата
+    // Удаляем служебные поля перед выдачей результата
     for (const article of articles) {
         delete article._chapterPrefix;
+        delete article._hasKeyword;
     }
 
     return articles;
