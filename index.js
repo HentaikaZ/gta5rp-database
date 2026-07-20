@@ -10,7 +10,7 @@ const path = require('path');
 // ScrapingAnt дает 10,000 бесплатных запросов в месяц (хватит на обновления каждый день).
 // Зарегистрируйтесь на https://scrapingant.com/ и вставьте ключ сюда, 
 // либо передайте через процесс окружения (в GitHub Secrets).
-const SCRAPINGANT_API_KEY = process.env.SCRAPINGANT_API_KEY || ""; 
+const SCRAPINGANT_API_KEY = process.env.SCRAPINGANT_API_KEY || "";
 
 const OUTPUT_DIR = path.join(__dirname, 'output');
 if (!fs.existsSync(OUTPUT_DIR)) {
@@ -73,190 +73,182 @@ const SERVERS = [
         id: 'sunrise-6',
         name: 'Sunrise (6)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/ugolovno-administrativnyi-kodeks-shtata-san-andreas-redakcija-ot-30-04-2026.877278/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas-redakcija-ot-09-08-2025.877271/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas-redakt-ot-30-04-2026.877277/"
         }
     },
     {
         id: 'rainbow-7',
         name: 'Rainbow (7)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/sa-gov-ugolovno-administrativnyi-kodeks-shtata-san-andreas-redakcija-ot-17-ijunja-2026-goda.1616700/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/sa-gov-dorozhnyi-kodeks-shtata-san-andreas-redakcija-ot-23-aprelja-2026-goda.1616715/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/sa-gov-processualnyi-kodeks-shtata-san-andreas-redakcija-ot-17-ijunja-2026-goda.1616697/"
         }
     },
     {
         id: 'richman-8',
         name: 'Richman (8)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks-shtata-san-andreas.796350/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/administrativnyi-kodeks-shtata-san-andreas.796349/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.796346/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.796342/"
         }
     },
     {
         id: 'eclipse-9',
         name: 'Eclipse (9)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks-red-ot-05-07-2026.360457/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/administrativnyi-kodeks-red-ot-26-03-2026.360455/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-red-ot-26-03-2026.360454/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-red-ot-08-06-2026.360456/"
         }
     },
     {
         id: 'lamesa-10',
         name: 'La Mesa (10)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/ugolovno-administrativnyi-kodeks-shtata-san-andreas.3285817/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.3285809/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.3285816/"
         }
     },
     {
         id: 'burton-11',
         name: 'Burton (11)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/ugolovno-administrativnyi-kodeks-shtata-san-andreas.3303227/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.3303236/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.3303228/"
         }
     },
     {
         id: 'rockford-12',
         name: 'Rockford (12)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/ugolovno-administrativnyi-kodeks-shtata-san-andreas.814371/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.823494/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.814326/"
         }
     },
     {
         id: 'alta-13',
         name: 'Alta (13)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks-redakcija-ot-04-07-2026.947308/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/administrativnyi-kodeks-redakcija-ot-04-07-2026.947306/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-redakcija-ot-23-04-2024.947297/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-redakcija-ot-05-05-2026.947305/"
         }
     },
     {
         id: 'delperro-14',
         name: 'Del Perro (14)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks.1500096/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/administrativnyi-kodeks.1500088/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks.1500184/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks.1500059/"
         }
     },
     {
         id: 'davis-15',
         name: 'Davis (15)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks-shtata-san-andreas-redakcija-ot-04-ijunja-2026-goda.1564197/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/kodeks-ob-administrativnyx-pravonarushenijax-shtata-san-andreas-redakcija-ot-08-aprelja-2026-goda.1564194/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas-redakcija-ot-04-ijunja-2026-goda.1564206/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas-redakcija-ot-15-maja-2026-goda.1564210/"
         }
     },
     {
         id: 'harmony-16',
         name: 'Harmony (16)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks-shtata-san-andreas.1755373/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/administrativnyi-kodeks-shtata-san-andreas.1755368/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.1755359/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.1755347/"
         }
     },
     {
         id: 'redwood-17',
         name: 'Redwood (17)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/sa-gov-ugolovno-administrativnyi-kodeks-shtata-san-andreas.1973527/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/sa-gov-dorozhnyi-kodeks-shtata-san-andreas.1973482/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/sa-gov-processualnyi-kodeks-shtata-san-andreas.1973524/"
         }
     },
     {
         id: 'hawick-18',
         name: 'Hawick (18)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks-shtata-san-andreas.2401791/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/administrativnyi-kodeks-shtata-san-andreas.2405367/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.2405349/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.2405363/"
         }
     },
     {
         id: 'grapeseed-19',
         name: 'Grapeseed (19)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks.3252140/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/administrativnyi-kodeks.3252139/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks.3252124/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks.3252138/"
         }
     },
     {
         id: 'murrieta-20',
         name: 'Murrieta (20)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/ugolovno-administrativnyi-kodeks-shtata-san-andreas.3237254/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.3237239/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.3237253/"
         }
     },
     {
         id: 'vespucci-21',
         name: 'Vespucci (21)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks-shtata-san-andreas.3276624/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/administrativnyi-kodeks-shtata-san-andreas.3276619/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.3276620/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.3276628/"
         }
     },
     {
         id: 'milton-22',
         name: 'Milton (22)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks.3322948/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/administrativnyi-kodeks.3322950/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks.3322939/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks.3322955/"
         }
     },
     {
         id: 'lapuerta-23',
         name: 'La Puerta (23)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовный Кодекс": "https://forum.gta5rp.com/threads/ugolovnyi-kodeks-shtata-san-andreas-redakcija-ot-10-ijulja-2026-goda.3364593/",
+            "Административный Кодекс": "https://forum.gta5rp.com/threads/kodeks-ob-administrativnyx-pravonarushenijax-shtata-san-andreas-redakcija-ot-21-ijunja-2026-goda.3364595/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas-redakcija-ot-10-ijulja-2026-goda.3364591/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas-redakcija-ot-10-ijulja-2026-goda.3364588/"
         }
     },
     {
         id: 'senora-24',
         name: 'Senora (24)',
         codes: {
-            "Уголовный Кодекс": "СЮДА_ССЫЛКУ",
-            "Административный Кодекс": "СЮДА_ССЫЛКУ",
-            "Дорожный Кодекс": "СЮДА_ССЫЛКУ",
-            "Процессуальный Кодекс": "СЮДА_ССЫЛКУ"
+            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/ugolovno-administrativnyi-kodeks-shtata-san-andreas.3389192/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.3389189/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.3389193/"
         }
     }
 ];
@@ -270,27 +262,27 @@ const SERVERS = [
  */
 async function fetchThreadText(url) {
     if (!url || url.includes("СЮДА_ССЫЛКУ")) return null;
-    
+
     try {
         let fetchUrl = url;
         if (SCRAPINGANT_API_KEY) {
             fetchUrl = `https://api.scrapingant.com/v2/general?url=${encodeURIComponent(url)}&x-api-key=${SCRAPINGANT_API_KEY}&browser=true`;
         }
-        
+
         const response = await axios.get(fetchUrl);
         const html = response.data;
-        
+
         const $ = cheerio.load(html);
-        
+
         // В движке XenForo текст первого сообщения находится в классе .message-inner .bbWrapper
         const firstPost = $('.message-inner .bbWrapper').first();
-        
+
         // Заменяем теги <br> на настоящие переносы строк (\n), чтобы регулярки сработали
         firstPost.find('br').replaceWith('\n');
-        
+
         // Убираем скрытый текст (спойлеры), цитаты и прочий мусор, если нужно
         firstPost.find('.bbCodeBlock-quote').remove();
-        
+
         // Достаем очищенный текст
         return firstPost.text();
     } catch (e) {
@@ -306,14 +298,14 @@ async function fetchThreadText(url) {
 function parseTextToArticles(rawText, categoryName) {
     const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
     const articles = [];
-    
+
     let currentArticleTitle = '';
     let currentArticleText = [];
     let currentChapterTitle = '';
-    
+
     const chapterRegex = /^(?:Глава|Раздел|Часть)\s+([IVX\d]+)\.?\s*(.*)$/i;
     const articleRegex = /^(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)\.?\s*(.*)$/i;
-    
+
     function saveCurrentArticle() {
         if (currentArticleTitle) {
             articles.push({
@@ -324,7 +316,7 @@ function parseTextToArticles(rawText, categoryName) {
             });
         }
     }
-    
+
     for (const line of lines) {
         // Проверяем, глава ли это
         const chapterMatch = line.match(chapterRegex);
@@ -333,7 +325,7 @@ function parseTextToArticles(rawText, categoryName) {
             currentArticleTitle = '';
             currentArticleText = [];
             currentChapterTitle = line; // Например: "Глава 1. Общие положения"
-            
+
             articles.push({
                 title: currentChapterTitle,
                 text: "",
@@ -342,7 +334,7 @@ function parseTextToArticles(rawText, categoryName) {
             });
             continue;
         }
-        
+
         // Проверяем, статья ли это
         const articleMatch = line.match(articleRegex);
         if (articleMatch) {
@@ -351,13 +343,13 @@ function parseTextToArticles(rawText, categoryName) {
             currentArticleText = [];
             continue;
         }
-        
+
         // Если это просто текст, добавляем его к текущей статье
         if (currentArticleTitle) {
             currentArticleText.push(line);
         }
     }
-    
+
     // Сохраняем последнюю статью в конце файла
     saveCurrentArticle();
     return articles;
@@ -370,19 +362,25 @@ function parseTextToArticles(rawText, categoryName) {
 async function run() {
     console.log('=== Запуск парсера законов GTA5RP ===\n');
 
+    let errorLog = [];
+
     for (const server of SERVERS) {
         console.log(`⏳ Обработка сервера: ${server.name}`);
         const serverData = []; // Массив, который будет сохранен в .json
-        
+        let serverHasErrors = false;
+        let serverErrorText = `Сервер: ${server.name}\n`;
+
         for (const [codeName, url] of Object.entries(server.codes)) {
             if (!url || url === 'СЮДА_ССЫЛКУ') {
                 console.log(`  [Пропуск] ${codeName} (ссылка не указана)`);
+                serverErrorText += `  - ${codeName}: Ссылка не указана\n`;
+                serverHasErrors = true;
                 continue;
             }
-            
+
             console.log(`  [Скачивание] ${codeName}...`);
             const rawText = await fetchThreadText(url);
-            
+
             if (rawText) {
                 const parsedArticles = parseTextToArticles(rawText, codeName);
                 if (parsedArticles.length > 0) {
@@ -393,13 +391,22 @@ async function run() {
                     console.log(`    ✓ Найдено: ${parsedArticles.length} (глав и статей)`);
                 } else {
                     console.log(`    ⚠ Текст скачан, но не удалось распознать структуру статей.`);
+                    serverErrorText += `  - ${codeName}: Текст скачан, но не удалось распознать структуру (возможно, пустой текст или изменился формат)\n`;
+                    serverHasErrors = true;
                 }
+            } else {
+                serverErrorText += `  - ${codeName}: Ошибка скачивания (возможно блокировка Cloudflare или неверная ссылка)\n`;
+                serverHasErrors = true;
             }
-            
+
             // Пауза 2 секунды между запросами, чтобы форум не заблокировал IP за DDoS
             await new Promise(r => setTimeout(r, 2000));
         }
-        
+
+        if (serverHasErrors) {
+            errorLog.push(serverErrorText);
+        }
+
         // Сохраняем JSON файл для сервера
         if (serverData.length > 0) {
             const outPath = path.join(OUTPUT_DIR, `${server.id}.json`);
@@ -410,7 +417,19 @@ async function run() {
             console.log(`❌ Нет данных для сохранения: ${server.name}\n`);
         }
     }
-    
+
+    // Сохранение лога ошибок в текстовый файл
+    if (errorLog.length > 0) {
+        const now = new Date();
+        const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+        const logFileName = `database[${dateStr}].txt`;
+        const logFilePath = path.join(OUTPUT_DIR, logFileName);
+        
+        const fileHeader = `=== Отчет об ошибках парсинга от ${dateStr} ===\n\nНиже перечислены кодексы, которые не удалось скачать или распознать:\n\n`;
+        fs.writeFileSync(logFilePath, fileHeader + errorLog.join('\n'));
+        console.log(`📝 Отчет об ошибках сохранен в: ${logFileName}`);
+    }
+
     console.log('🎉 Парсинг успешно завершен! Файлы лежат в папке output.');
 }
 
