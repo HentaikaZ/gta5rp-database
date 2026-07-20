@@ -451,6 +451,9 @@ async function run() {
                     console.log(`    ⚠ Текст скачан, но не удалось распознать структуру статей.`);
                     serverErrorText += `  - ${codeName}: Текст скачан, но не удалось распознать структуру (возможно, пустой текст или изменился формат)\n`;
                     serverHasErrors = true;
+                    // Сохраняем текст в файл для отладки
+                    const safeName = codeName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
+                    fs.writeFileSync(path.join(OUTPUT_DIR, `failed_${server.id}_${safeName}.txt`), rawText, 'utf-8');
                 }
             } else {
                 console.log(`    ❌ Ошибка скачивания после ${maxAttempts} попыток.`);
