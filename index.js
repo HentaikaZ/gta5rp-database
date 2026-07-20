@@ -311,8 +311,12 @@ function parseTextToArticles(rawText, categoryName) {
     let currentPartNumber = '';
     let currentPartText = [];
 
+    // Если это Дорожный, Этический, Трудовой кодекс или ПДД, разрешаем статьи из одной цифры (например "2. ") даже без слова "Статья"
+    const allowSingleDigitWithoutKeyword = /дорожный|этический|трудовой|пдд/i.test(categoryName);
+    const singleDigitPart = allowSingleDigitWithoutKeyword ? '*' : '+';
+
     const chapterRegex = /^(?:Глава|Раздел|Часть)\s+([IVX\d]+)\.?\s*(.*)$/i;
-    const articleRegex = /^(?:[^a-zа-я0-9\[\(\{]+|(?:\[|\(|\{)[^\]\)\}]*(?:\]|\)|\}))*\s*(?:(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)|(\d+(?:\.\d+)+))\.?\s*(.*)$/i;
+    const articleRegex = new RegExp(`^(?:[^a-zа-я0-9\\[\\(\\{]+|(?:\\[|\\(|\\{)[^\\]\\)\\}]*(?:\\]|\\)|\\}))*\\s*(?:(?:Статья|Ст\\.?|Пункт|П\\.?)\\s*(\\d+(?:\\.\\d+)*)|(\\d+(?:\\.\\d+)${singleDigitPart}))\\.?\\s*(.*)$`, 'i');
     const partRegex = /^(?:[^a-zа-я0-9]*\s*)?(?:ч\.?|часть)\s*(\d+)\.?\s*(.*)$/i;
 
     function saveCurrentPart(isFollowedByPart = false) {
