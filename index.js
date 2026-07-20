@@ -256,7 +256,7 @@ async function fetchThreadText(page, url) {
 
     try {
         await page.goto(url, { waitUntil: 'domcontentloaded' });
-        
+
         try {
             await page.waitForSelector('.message-inner .bbWrapper', { timeout: 15000 });
         } catch (e) {
@@ -275,7 +275,7 @@ async function fetchThreadText(page, url) {
 
         // Заменяем теги <br> на настоящие переносы строк (\n), чтобы регулярки сработали
         firstPost.find('br').replaceWith('\n');
-        
+
         // Вставляем переносы строк вокруг блочных элементов, чтобы текст не слипался
         firstPost.find('p, div, li, h1, h2, h3, h4, h5, h6, ul, ol, table, tr, td, th, tbody, thead, blockquote').prepend('\n').append('\n');
 
@@ -296,21 +296,21 @@ function parseTextToArticles(rawText, categoryName) {
     const articles = [];
 
     let currentChapterTitle = '';
-    
+
     let currentArticleNumber = '';
     let currentArticleName = '';
-    
+
     let currentPartNumber = '';
     let currentPartText = [];
 
     const chapterRegex = /^(?:Глава|Раздел|Часть)\s+([IVX\d]+)\.?\s*(.*)$/i;
-    const articleRegex = /^(?:(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)|(\d+(?:\.\d+)+))\.?\s*(.*)$/i;
-    const partRegex = /^(?:ч\.?|часть)\s*(\d+)\.?\s*(.*)$/i;
+    const articleRegex = /^(?:[^a-zа-я0-9]*\s*)?(?:(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)|(\d+(?:\.\d+)+))\.?\s*(.*)$/i;
+    const partRegex = /^(?:[^a-zа-я0-9]*\s*)?(?:ч\.?|часть)\s*(\d+)\.?\s*(.*)$/i;
 
-    function saveCurrentPart() {
+    function saveCurrentPart(isFollowedByPart = false) {
         if (currentArticleNumber) {
             // Не сохраняем "пустую" статью (без текста), если сразу после названия идёт ч. 1
-            if (!currentPartNumber && currentPartText.length === 0) {
+            if (!currentPartNumber && currentPartText.length === 0 && isFollowedByPart) {
                 return;
             }
 
@@ -318,7 +318,7 @@ function parseTextToArticles(rawText, categoryName) {
             if (currentPartNumber) {
                 title += ` ч.${currentPartNumber}`;
             }
-            
+
             let textPieces = [];
             if (currentArticleName) {
                 textPieces.push(currentArticleName + (currentArticleName.endsWith('.') ? '' : '.'));
@@ -326,7 +326,7 @@ function parseTextToArticles(rawText, categoryName) {
             if (currentPartText.length > 0) {
                 textPieces.push(currentPartText.join('\n'));
             }
-            
+
             articles.push({
                 title: title,
                 text: textPieces.join(' ').trim(),
@@ -340,12 +340,12 @@ function parseTextToArticles(rawText, categoryName) {
         // Проверяем, глава ли это
         const chapterMatch = line.match(chapterRegex);
         if (chapterMatch) {
-            saveCurrentPart();
+            saveCurrentPart(false);
             currentArticleNumber = '';
             currentArticleName = '';
             currentPartNumber = '';
             currentPartText = [];
-            
+
             currentChapterTitle = line;
             articles.push({
                 title: currentChapterTitle,
@@ -359,7 +359,7 @@ function parseTextToArticles(rawText, categoryName) {
         // Проверяем, статья ли это
         const articleMatch = line.match(articleRegex);
         if (articleMatch) {
-            saveCurrentPart();
+            saveCurrentPart(false);
             currentArticleNumber = articleMatch[1] || articleMatch[2]; // e.g. "15.1"
             currentArticleName = articleMatch[3]; // e.g. "Превышение полномочий"
             currentPartNumber = '';
@@ -370,7 +370,7 @@ function parseTextToArticles(rawText, categoryName) {
         // Проверяем, часть ли это
         const partMatch = line.match(partRegex);
         if (partMatch && currentArticleNumber) {
-            saveCurrentPart(); // Save previous part if it existed
+            saveCurrentPart(true); // Save previous part if it existed
             currentPartNumber = partMatch[1]; // e.g. "1"
             currentPartText = [];
             if (partMatch[2]) {
@@ -422,7 +422,7 @@ async function run() {
             }
 
             console.log(`  [Скачивание] ${codeName}...`);
-            
+
             let rawText = null;
             let attempts = 0;
             const maxAttempts = 3;
@@ -430,7 +430,7 @@ async function run() {
             while (attempts < maxAttempts) {
                 attempts++;
                 rawText = await fetchThreadText(page, url);
-                
+
                 if (rawText) {
                     break; // Успешно скачали
                 } else if (attempts < maxAttempts) {
