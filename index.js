@@ -327,11 +327,11 @@ function parseTextToArticles(rawText, categoryName) {
                 title += ` ч.${currentPartNumber}`;
             }
 
-            // Добавляем префикс главы, чтобы статьи с одинаковыми номерами (как на Alta) отличались
+            let chapterPrefix = null;
             if (currentChapterTitle) {
                 const shortChapterMatch = currentChapterTitle.match(/^(?:Глава|Раздел|Часть)\s+[IVX\d]+/i);
                 if (shortChapterMatch) {
-                    title = `${shortChapterMatch[0]} | ${title}`;
+                    chapterPrefix = shortChapterMatch[0];
                 }
             }
 
@@ -347,7 +347,8 @@ function parseTextToArticles(rawText, categoryName) {
                 title: title,
                 text: textPieces.join(' ').trim(),
                 category: categoryName,
-                isChapter: false
+                isChapter: false,
+                _chapterPrefix: chapterPrefix
             });
         }
     }
@@ -403,6 +404,45 @@ function parseTextToArticles(rawText, categoryName) {
 
     // Сохраняем последнюю статью в конце файла
     saveCurrentPart();
+    
+    // ПОСТ-ОБРАБОТКА: Проверяем, дублируются ли номера статей в разных главах
+    const articleBaseNumbers = {}; // title -> Set of chapter prefixes
+    for (const article of articles) {
+        if (!article.isChapter && article._chapterPrefix) {
+            // Берем только сам номер статьи без части (чтобы "1.1" и "1.1 ч.1" считались одной и той же статьей для проверки)
+            const baseTitleMatch = article.title.match(/^[\d\.]+/);
+            const baseTitle = baseTitleMatch ? baseTitleMatch[0] : article.title;
+            
+            if (!articleBaseNumbers[baseTitle]) {
+                articleBaseNumbers[baseTitle] = new Set();
+            }
+            articleBaseNumbers[baseTitle].add(article._chapterPrefix);
+        }
+    }
+
+    // Если есть хотя бы одна статья, которая встречается в РАЗНЫХ главах, значит нумерация сбрасывается в каждой главе (как на Alta)
+    let needsChapterPrefix = false;
+    for (const baseTitle in articleBaseNumbers) {
+        if (articleBaseNumbers[baseTitle].size > 1) {
+            needsChapterPrefix = true;
+            break;
+        }
+    }
+
+    // Если нужно, применяем префикс ко всем статьям
+    if (needsChapterPrefix) {
+        for (const article of articles) {
+            if (!article.isChapter && article._chapterPrefix) {
+                article.title = `${article._chapterPrefix} | ${article.title}`;
+            }
+        }
+    }
+
+    // Удаляем служебное поле _chapterPrefix перед выдачей результата
+    for (const article of articles) {
+        delete article._chapterPrefix;
+    }
+
     return articles;
 }
 
