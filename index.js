@@ -56,8 +56,8 @@ const SERVERS = [
         name: 'Insquad (5)',
         codes: {
             "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/ugolovno-administrativnyi-kodeks.738487/",
-            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks.1360667/",
-            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks.738491/"
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks.772196/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks.772191/"
         }
     },
     {
@@ -325,6 +325,14 @@ function parseTextToArticles(rawText, categoryName) {
             let title = currentArticleNumber;
             if (currentPartNumber) {
                 title += ` ч.${currentPartNumber}`;
+            }
+
+            // Добавляем префикс главы, чтобы статьи с одинаковыми номерами (как на Alta) отличались
+            if (currentChapterTitle) {
+                const shortChapterMatch = currentChapterTitle.match(/^(?:Глава|Раздел|Часть)\s+[IVX\d]+/i);
+                if (shortChapterMatch) {
+                    title = `${shortChapterMatch[0]} | ${title}`;
+                }
             }
 
             let textPieces = [];

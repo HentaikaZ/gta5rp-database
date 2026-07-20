@@ -1,4 +1,5 @@
-const rawText = `Статья 1.1. Правонарушением признается нарушение...
+const rawText = `Глава I. Введение
+Статья 1.1. Правонарушением признается нарушение...
 Уголовным преступлением признается...
 Статья 1.2. Не является преступлением действие (бездействие)...
 Статья 1.3. Совокупность преступлений.
@@ -31,6 +32,14 @@ function parseTextToArticles(rawText, categoryName) {
             let title = currentArticleNumber;
             if (currentPartNumber) {
                 title += ` ч.${currentPartNumber}`;
+            }
+
+            // Добавляем префикс главы, чтобы статьи с одинаковыми номерами (как на Alta) отличались
+            if (currentChapterTitle) {
+                const shortChapterMatch = currentChapterTitle.match(/^(?:Глава|Раздел|Часть)\s+[IVX\d]+/i);
+                if (shortChapterMatch) {
+                    title = `${shortChapterMatch[0]} | ${title}`;
+                }
             }
             
             let textPieces = [];
