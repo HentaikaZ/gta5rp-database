@@ -257,12 +257,13 @@ async function fetchThreadText(page, url) {
     try {
         await page.goto(url, { waitUntil: 'domcontentloaded' });
         
-        // Ждем появления контента, чтобы точно знать, что Cloudflare пропустил нас
-        // Максимальное время ожидания 15 секунд
         try {
             await page.waitForSelector('.message-inner .bbWrapper', { timeout: 15000 });
         } catch (e) {
             console.error(`    [Cloudflare/Timeout] Не удалось дождаться контента для ${url}`);
+            const html = await page.content();
+            console.log("    [DEBUG] HTML страницы:");
+            console.log(html.substring(0, 1000)); // Выводим первые 1000 символов, чтобы понять, что там
             return null;
         }
 
