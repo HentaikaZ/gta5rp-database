@@ -312,7 +312,7 @@ function parseTextToArticles(rawText, categoryName) {
     let currentPartText = [];
 
     const chapterRegex = /^(?:Глава|Раздел|Часть)\s+([IVX\d]+)\.?\s*(.*)$/i;
-    const articleRegex = /^(?:[^a-zа-я0-9]*\s*)?(?:(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)|(\d+(?:\.\d+)+))\.?\s*(.*)$/i;
+    const articleRegex = /^(?:[^a-zа-я0-9\[\(\{]+|(?:\[|\(|\{)[^\]\)\}]*(?:\]|\)|\}))*\s*(?:(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)|(\d+(?:\.\d+)+))\.?\s*(.*)$/i;
     const partRegex = /^(?:[^a-zа-я0-9]*\s*)?(?:ч\.?|часть)\s*(\d+)\.?\s*(.*)$/i;
 
     function saveCurrentPart(isFollowedByPart = false) {

@@ -1,9 +1,8 @@
-const rawText = `Глава 1. Общая
-Статья 1.1. Нарушение
-Статья 1.2. Еще нарушение
-Глава 2. Вторая
-Статья 1.1. Второе нарушение
-Статья 1.2. Третье нарушение`;
+const rawText = `Глава 6. Преступления против жизни и здоровья.
+[А]6.1. (РЕГИОНАЛЬНЫЙ) Умышленное нанесение телесных повреждений
+[C}6.4.* (ФЕДЕРАЛЬНЫЙ) Умышленное нанесение особо тяжких
+Глава 7. Другая глава
+[Т]7.1.* Убийство`;
 
 function parseTextToArticles(rawText, categoryName) {
     const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
@@ -18,7 +17,7 @@ function parseTextToArticles(rawText, categoryName) {
     let currentPartText = [];
 
     const chapterRegex = /^(?:Глава|Раздел|Часть)\s+([IVX\d]+)\.?\s*(.*)$/i;
-    const articleRegex = /^(?:[^a-zа-я0-9]*\s*)?(?:(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)|(\d+(?:\.\d+)+))\.?\s*(.*)$/i;
+    const articleRegex = /^(?:[^a-zа-я0-9\[\(\{]+|(?:\[|\(|\{)[^\]\)\}]*(?:\]|\)|\}))*\s*(?:(?:Статья|Ст\.?|Пункт|П\.?)\s*(\d+(?:\.\d+)*)|(\d+(?:\.\d+)+))\.?\s*(.*)$/i;
     const partRegex = /^(?:[^a-zа-я0-9]*\s*)?(?:ч\.?|часть)\s*(\d+)\.?\s*(.*)$/i;
 
     function saveCurrentPart(isFollowedByPart = false) {
