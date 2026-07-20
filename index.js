@@ -272,23 +272,13 @@ async function fetchThreadText(url) {
     if (!url || url.includes("СЮДА_ССЫЛКУ")) return null;
     
     try {
-        const br = await getBrowser();
-        const page = await br.newPage();
-        
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-        
-        // Ждем загрузки (позволяет пройти Cloudflare)
-        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-        
-        // Ждем, пока на странице не появится блок с сообщением (означает, что Cloudflare пропустил)
-        try {
-            await page.waitForSelector('.message-inner .bbWrapper', { timeout: 30000 });
-        } catch (e) {
-            console.log(`    [Внимание] Не дождались сообщения для ${url}, возможно капча требует ручного решения.`);
+        let fetchUrl = url;
+        if (SCRAPINGANT_API_KEY) {
+            fetchUrl = `https://api.scrapingant.com/v2/general?url=${encodeURIComponent(url)}&x-api-key=${SCRAPINGANT_API_KEY}&browser=false`;
         }
         
-        const html = await page.content();
-        await page.close(); // Закрываем вкладку
+        const response = await axios.get(fetchUrl);
+        const html = response.data;
         
         const $ = cheerio.load(html);
         
