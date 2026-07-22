@@ -6,7 +6,7 @@ call npm run start
 echo.
 echo === Отправка изменений на GitHub ===
 git add output/
-git commit -m "Автоматическое обновление базы законов GTA5RP"
+git commit -m "Auto-update GTA5RP DB"
 git push
 
 echo.
