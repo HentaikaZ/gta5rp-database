@@ -120,9 +120,9 @@ const SERVERS = [
         id: 'rockford-12',
         name: 'Rockford (12)',
         codes: {
-            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/ugolovno-administrativnyi-kodeks-shtata-san-andreas.814371/",
-            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas.823494/",
-            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas.814326/"
+            "Уголовно-административный Кодекс": "https://forum.gta5rp.com/threads/ugolovno-administrativnyi-kodeks-shtata-san-andreas-redakcija-ot-24-07-2026.3414727/",
+            "Дорожный Кодекс": "https://forum.gta5rp.com/threads/dorozhnyi-kodeks-shtata-san-andreas-redakcija-ot-24-07-2026.3414704/",
+            "Процессуальный Кодекс": "https://forum.gta5rp.com/threads/processualnyi-kodeks-shtata-san-andreas-redakcija-ot-26-07-2026.3414716/"
         }
     },
     {
