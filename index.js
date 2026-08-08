@@ -3,9 +3,13 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
 
-const OUTPUT_DIR = path.join(__dirname, 'output');
+const OUTPUT_DIR = path.join(__dirname, 'database');
+const LOGS_DIR = path.join(OUTPUT_DIR, 'logs');
 if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR);
+}
+if (!fs.existsSync(LOGS_DIR)) {
+    fs.mkdirSync(LOGS_DIR);
 }
 
 // ============================================================================
@@ -258,7 +262,7 @@ async function fetchThreadText(page, url) {
         await page.goto(url, { waitUntil: 'domcontentloaded' });
 
         try {
-            await page.waitForSelector('.message-inner .bbWrapper', { timeout: 15000 });
+            await page.waitForSelector('.message-inner .bbWrapper', { timeout: process.env.USE_2CAPTCHA_EXT ? 60000 : 15000 });
         } catch (e) {
             console.error(`    [Cloudflare/Timeout] Не удалось дождаться контента для ${url}`);
             const html = await page.content();
@@ -463,12 +467,35 @@ async function run() {
     console.log('=== Запуск парсера законов GTA5RP ===\n');
 
     // Запускаем браузер один раз на все запросы
-    console.log('⏳ Запуск браузера для обхода Cloudflare...');
-    const { browser, page } = await connect({
-        headless: 'auto',
-        turnstile: true
-    });
-    console.log('✅ Браузер запущен!\n');
+    let browser, page;
+    if (process.env.USE_2CAPTCHA_EXT === 'true') {
+        console.log('⏳ Запуск браузера с 2captcha extension...');
+        const puppeteer = require('puppeteer');
+        const extPath = path.join(process.cwd(), '2captcha-ext');
+        browser = await puppeteer.launch({
+            headless: false,
+            args: [
+                `--disable-extensions-except=${extPath}`,
+                `--load-extension=${extPath}`,
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--window-size=1280,720'
+            ]
+        });
+        page = await browser.newPage();
+        page.setDefaultTimeout(60000); // Allow time for captcha solving
+        console.log('✅ Браузер с 2captcha запущен!\n');
+    } else {
+        console.log('⏳ Запуск браузера для обхода Cloudflare...');
+        const { connect } = require('puppeteer-real-browser');
+        const result = await connect({
+            headless: 'auto',
+            turnstile: true
+        });
+        browser = result.browser;
+        page = result.page;
+        console.log('✅ Браузер запущен!\n');
+    }
 
     let errorLog = [];
 
@@ -518,7 +545,7 @@ async function run() {
                     serverHasErrors = true;
                     // Сохраняем текст в файл для отладки
                     const safeName = codeName.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
-                    fs.writeFileSync(path.join(OUTPUT_DIR, `failed_${server.id}_${safeName}.txt`), rawText, 'utf-8');
+                    fs.writeFileSync(path.join(LOGS_DIR, `failed_${server.id}_${safeName}.txt`), rawText, 'utf-8');
                 }
             } else {
                 console.log(`    ❌ Ошибка скачивания после ${maxAttempts} попыток.`);
@@ -539,7 +566,7 @@ async function run() {
             const outPath = path.join(OUTPUT_DIR, `${server.id}.json`);
             // Формат полностью совместим с Lexis-App
             fs.writeFileSync(outPath, JSON.stringify({ data: serverData }, null, 2), 'utf-8');
-            console.log(`✅ Сохранено: output/${server.id}.json\n`);
+            console.log(`✅ Сохранено: database/${server.id}.json\n`);
         } else {
             console.log(`❌ Нет данных для сохранения: ${server.name}\n`);
         }
@@ -550,7 +577,7 @@ async function run() {
         const now = new Date();
         const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
         const logFileName = `database[${dateStr}].txt`;
-        const logFilePath = path.join(OUTPUT_DIR, logFileName);
+        const logFilePath = path.join(LOGS_DIR, logFileName);
 
         const fileHeader = `=== Отчет об ошибках парсинга от ${dateStr} ===\n\nНиже перечислены кодексы, которые не удалось скачать или распознать:\n\n`;
         fs.writeFileSync(logFilePath, fileHeader + errorLog.join('\n'));
@@ -558,7 +585,7 @@ async function run() {
     }
 
     await browser.close();
-    console.log('🎉 Парсинг успешно завершен! Файлы лежат в папке output.');
+    console.log('🎉 Парсинг успешно завершен! Файлы лежат в папке database.');
 }
 
 run();

@@ -1,37 +1,55 @@
-name: Auto-update GTA5RP DB
+name: Auto Update Database
 
 on:
   schedule:
-    - cron: '0 0 */4 * *' # Запускается каждые 4 дня в полночь по UTC
-  workflow_dispatch: # Позволяет запускать вручную
+    - cron: '0 0 */2 * *' # Every 2 days at midnight
+  workflow_dispatch:
 
 jobs:
-  update-db:
+  update:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '20'
 
       - name: Install dependencies
+        run: npm ci
+
+      - name: Download and configure 2captcha extension
         run: |
-          npm ci || npm install
-          sudo apt-get update && sudo apt-get install -y xvfb
+          wget https://github.com/2captcha/2captcha-extension/releases/latest/download/2captcha-solver-in-browser.zip
+          unzip 2captcha-solver-in-browser.zip -d 2captcha-ext
+          # Insert the API key directly into the config file
+          sed -i 's/"apiKey": ""/"apiKey": "13e130f15f7c69f674335d6421def456"/' 2captcha-ext/common/config.js
+          # Enable Turnstile auto-solving if not already enabled
+          sed -i 's/autoSolveTurnstile: false/autoSolveTurnstile: true/' 2captcha-ext/common/config.js || true
+          sed -i 's/autoSolveCloudflare: false/autoSolveCloudflare: true/' 2captcha-ext/common/config.js || true
+
+      - name: Setup Display (Xvfb) for Puppeteer extensions
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+          sudo Xvfb :99 -ac &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
 
       - name: Run parser
-        run: xvfb-run --auto-servernum node index.js
+        env:
+          # Use the token directly as requested by the user, or preferably from secrets
+          TWOCAPTCHA_TOKEN: 13e130f15f7c69f674335d6421def456
+          USE_2CAPTCHA_EXT: "true"
+        run: npm run start
 
       - name: Commit and push changes
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add output/ || echo "No output to add"
-          git commit -m "Автоматическое обновление базы законов GTA5RP" || echo "Нет изменений для коммита"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add database/
+          git commit -m "Auto-update GTA5RP DB (cron with 2captcha)" || exit 0
           git push
