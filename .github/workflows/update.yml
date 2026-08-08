@@ -28,7 +28,7 @@ jobs:
           wget $ASSET_URL -O 2captcha-solver.zip
           unzip 2captcha-solver.zip -d 2captcha-ext
           # Insert the API key directly into the config file
-          sed -i 's/"apiKey": ""/"apiKey": "13e130f15f7c69f674335d6421def456"/' 2captcha-ext/common/config.js
+          sed -i 's/apiKey: null/apiKey: "13e130f15f7c69f674335d6421def456"/' 2captcha-ext/common/config.js
           # Enable Turnstile auto-solving if not already enabled
           sed -i 's/autoSolveTurnstile: false/autoSolveTurnstile: true/' 2captcha-ext/common/config.js || true
           sed -i 's/autoSolveCloudflare: false/autoSolveCloudflare: true/' 2captcha-ext/common/config.js || true
